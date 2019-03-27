@@ -9,7 +9,9 @@ LABEL maintainer="Dan Clark <danclark@redhat.com>"
 USER root
 
 # ffmpeg for matplotlib anim
-RUN yum -y install ffmpeg \
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+  && yum -y localinstall --nogpgcheck http://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
+  && yum -y install ffmpeg \
   && yum clean all \
   && rm -rf /var/cache/yum
 
@@ -19,6 +21,7 @@ USER $NB_UID
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
 RUN conda install --yes \
+    'conda-build' \
     'conda-forge::blas=*=openblas' \
     'ipywidgets=7.4*' \
     'pandas=0.24*' \
@@ -45,7 +48,7 @@ RUN conda install --yes \
     'protobuf=3.7.*' \
     'xlrd'  && \
     conda remove --yes --force qt pyqt && \
-    conda build purge-all && \
+    conda build purge-all \
     # Activate ipywidgets extension in the environment that runs the notebook server
     jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
     # Also activate ipywidgets extension for JupyterLab
