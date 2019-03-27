@@ -1,0 +1,39 @@
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+#ARG BASE_CONTAINER=jupyter/base-notebook
+#FROM $BASE_CONTAINER
+FROM localhost/rhel7/jupyter/base-notebook
+
+LABEL maintainer="Dan Clark <danclark@redhat.com>"
+
+USER root
+
+# Install all OS dependencies for fully functional notebook server
+RUN yum -y install \
+#    build-essential \
+    emacs \
+    git \
+    inkscape \
+#    jed \
+#    libsm6 \
+    libXext-devel \
+    libXrender \
+#    lmodern \
+    nmap-ncat \
+#    pandoc \
+#    python-dev \
+#    texlive-fonts-extra \
+#    texlive-fonts-recommended \
+#    texlive-generic-recommended \
+#    texlive-latex-base \
+#    texlive-latex-extra \
+#    texlive-xetex \
+    tzdata \
+    unzip \
+    nano \
+  && yum clean all \
+  && rm -rf /var/cache/yum
+
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_UID
