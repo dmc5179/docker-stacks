@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM registry.access.redhat.com/rhel7.6
+FROM registry.access.redhat.com/ubi7/ubi-init:latest
 
 LABEL maintainer="Dan Clark <danclark@redhat.com>"
 ARG NB_USER="jovyan"
@@ -16,6 +16,7 @@ USER root
 RUN yum-config-manager --enable rhel-7-server-rpms \
   && yum-config-manager --enable rhel-7-server-extra-rpms \
   && yum-config-manager --enable rhel-7-server-optional-rpms \
+  && yum -y update \
   && yum -y install \
   wget \
   bzip2 \
