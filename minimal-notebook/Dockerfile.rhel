@@ -7,18 +7,19 @@ LABEL maintainer="Dan Clark <danclark@redhat.com>"
 USER root
 
 # Install all OS dependencies for fully functional notebook server
-RUN yum -y install \
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+  && yum -y install \
 #    build-essential \
     emacs \
     git \
     inkscape \
 #    jed \
-#    libsm6 \
+    libSM \
     libXext-devel \
     libXrender \
 #    lmodern \
     nmap-ncat \
-#    pandoc \
+    pandoc \
 #    python-dev \
 #    texlive-fonts-extra \
 #    texlive-fonts-recommended \
