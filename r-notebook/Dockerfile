@@ -46,5 +46,8 @@ RUN conda install --quiet --yes \
     'r-sparklyr=0.9*' \
     'r-htmlwidgets=1.2*' \
     'r-hexbin=1.27*' && \
-    conda clean -tipsy && \
+    conda clean --all -f -y && \
     fix-permissions $CONDA_DIR
+
+# Install e1071 R package (dependency of the caret R package)
+RUN conda install --quiet --yes r-e1071
