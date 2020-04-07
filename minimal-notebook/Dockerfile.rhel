@@ -1,15 +1,16 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-FROM quay.io/danclark/jupyter-base-notebook:latest
+FROM quay.io/jupyter-notebooks/base-notebook:latest
 
 LABEL maintainer="Dan Clark <danclark@redhat.com>"
 
 USER root
 
 # Install all OS dependencies for fully functional notebook server
-RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-  && yum -y install \
-#    build-essential \
+RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
+ && dnf -y install 'dnf-command(config-manager)' \
+ && dnf config-manager --set-enabled PowerTools \
+ && dnf --setopt tsflags=nodocs --disableplugin=subscription-manager -y install \
     emacs \
     git \
     inkscape \
@@ -30,12 +31,12 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
     tzdata \
     unzip \
     nano \
-  && yum clean all \
-  && rm -rf /var/cache/yum
+  && dnf clean all \
+  && rm -rf /var/cache/dnf
 
 RUN echo 'c.NotebookApp.allow_password_change = True' >> /home/$NB_USER/.jupyter/jupyter_notebook_config.py \
-  && echo "c.NotebookApp.token = ''" >> /home/$NB_USER/.jupyter/jupyter_notebook_config.py \
-  && echo "c.NotebookApp.password = ''" >> /home/$NB_USER/.jupyter/jupyter_notebook_config.py
+ && echo "c.NotebookApp.token = ''" >> /home/$NB_USER/.jupyter/jupyter_notebook_config.py \
+ && echo "c.NotebookApp.password = ''" >> /home/$NB_USER/.jupyter/jupyter_notebook_config.py
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
